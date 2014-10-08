@@ -6,29 +6,17 @@
     </head>
 
 	<body>
-        <!--div class="header">
-            <a href="http://zencodism.com"><img src="enso.jpg" height="80px" width="80px"/>
-            </a>A first drafts of space sim via zencodism</div-->
-        <p>
-        <span id="fps">0</span>&nbsp&nbsp&nbsp&nbsp<span id="objcount">0</span>
-        </p>
-        <div id="box">
-		<canvas id="screen" width=720 height=400></canvas>
-            <!--canvas id="steer" width=200 height=200></canvas-->
-
-        <div class="controls">
-            <canvas id="ship" tabindex='1' width=200 height=200></canvas>
-            <div>
-                <a id="zoom_plus" href="#"><div>+</div></a>
-                <a id="zoom_minus" href="#"><div>-</div></a>
-            </div>
-        </div>
-        </div>
+<!--        <span id="fps">0</span>&nbsp&nbsp&nbsp&nbsp<span id="objcount">0</span>-->
+        <canvas id="screen" style="position: relative; z-index: 1;"></canvas>   
+<!--        <div style="position: absolute top: 0px left: 0px; width: 300px; height: 100px; z-index: 100;">Boo.</div>-->
+        
 <!--        <script type="text/javascript" src="game.min.js"></script>-->
-        <script type="text/javascript" src="utils.js"></script>
         <script type="text/javascript" src="FX.js"></script>
-        <script type="text/javascript" src="ship_control.js"></script>
-        <script type="text/javascript" src="game.js"></script>
+        <script type="text/javascript" src="utils.js"></script>
+        <script type="text/javascript" src="controls.js"></script>
+        
+        <script type="text/javascript" src="space.js"></script>
+        <script type="text/javascript" src="main.js"></script>
 
 	</body>
 </html>

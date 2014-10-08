@@ -36,7 +36,7 @@
 
 //  Canvas mouse position calculation by Ryan Artecona
 //  http://stackoverflow.com/a/5932203
-
+//  unused right now since the canvas takes up whole screen
 function relMouseCoords(event) {
     "use strict";
     var totalOffsetX = 0,
@@ -57,4 +57,20 @@ function relMouseCoords(event) {
 }
 HTMLCanvasElement.prototype.relMouseCoords = relMouseCoords;
 
+(function() {
+    "use strict";
+    var canvas = document.getElementById('screen'),
+        context = canvas.getContext('2d');
+
+    // resize the canvas to fill browser window dynamically
+    window.addEventListener('resize', resizeCanvas, false);
+
+    function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            FX.width = canvas.width;
+            FX.height = canvas.height;    
+    }
+    resizeCanvas();
+})();
  
