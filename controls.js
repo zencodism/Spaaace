@@ -4,8 +4,8 @@
         thrust = 0;
 
     arrowsPressed = function(key){
-        if(key.keyCode == 38) thrust = 1;
-        if(key.keyCode == 40) thrust = -1;
+        if(key.keyCode == 38) thrust = 12;
+        if(key.keyCode == 40) thrust = -12;
         if(key.keyCode == 37) rotation = -0.2;
         if(key.keyCode == 39) rotation = 0.2;
         return false;
@@ -25,7 +25,7 @@
     
     zoom_handler = function(event){
         event.stopPropagation();
-        FX.setPov(event);
+        //FX.setPov(event);
         var delta = 0;
         if (!event) event = window.event;
         // normalize the delta

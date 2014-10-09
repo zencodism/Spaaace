@@ -2,12 +2,12 @@ var fpscount = document.getElementById("fps")
     , objcount = document.getElementById("objcount")
     , ripples = []
     , frameId = NaN
-    , rnd = Math.random
     , dt
-    , framecounter = 0;
+    , tprev;
 
 function init(){
     dt = Date.now();
+    tprev = dt;
     CTRL.init_controls();
     S.init_world();
 }
@@ -43,37 +43,35 @@ function gravity() {
         if(S.nodes[i].mass <= 0){
             S.nodes.splice(i, 1);
             S.masscount --;
+            S.shipindex --;
         }
     }
 }
 
 function main_loop() {
-    var ddt = Date.now() - dt;
-    dt = Date.now();
-    var fps = 0;
     FX.clear();
     frameId = requestAnimationFrame(main_loop);
     
-    framecounter++;
-    fps = Math.floor(1000/ddt);
-    if(framecounter >= fps){
-        framecounter = 1;
-//        fpscount.innerHTML = "FPS: " + fps;
-//        objcount.innerHTML = "Objects population: " + (S.nodes.length);
-    }
+    var ddt = Date.now() - dt;
+    dt = Date.now();
+    var fps = Math.floor(1000/ddt);
     var ship = S.nodes[S.shipindex];
         
-    if(framecounter % 6 == 0){
-            
-        if(ship.thrust != 0){
+    if(dt - tprev >= 200){
+        tprev = dt;
+        gravity();
+        if(ship.thrust){
             ship.vx += ship.thrust * Math.cos(ship.rotation);
             ship.vy += ship.thrust * Math.sin(ship.rotation);
             ripples.unshift({x: ship.x, y: ship.y, age: 0});
         }
         if(ripples.length > 40 || (ripples.length > 0 && ripples[ripples.length-1].age > 40)    ) ripples.pop();
+//        fpscount.innerHTML = "FPS: " + fps;
+//        objcount.innerHTML = "Objects population: " + (S.nodes.length);
     }
     
-    gravity();
+    if(ship.thrust && !ripples.length)
+        ripples.unshift({x: ship.x, y: ship.y, age: 0});
     
     FX.update_pov();
 
@@ -81,8 +79,8 @@ function main_loop() {
         FX.draw_ripple(ripples[i]);
 
     S.nodes.forEach(function(node){
-        node.x += node.vx; //node.posx[0] + ((node.posx[1] - node.posx[0]) * (framecounter / fps));
-        node.y += node.vy; //node.posy[0] + ((node.posy[1] - node.posy[0]) * (framecounter / fps));;
+        node.x += node.vx / fps;
+        node.y += node.vy / fps;
         node.draw();
     });
     s = CTRL.state(); 

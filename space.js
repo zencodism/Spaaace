@@ -1,8 +1,9 @@
 (function(S){
-    S.G = 0.02;
+    S.G = 100;
     S.nodes = [];
     S.masscount = 0;
     S.shipindex = 0;
+    var rnd = Math.random;
     
     var eat = function(a){
         if(this.mass == 1 || a.mass == 1) return;
@@ -29,19 +30,31 @@
         this.vx = vx;
         this.vy = vy;
         this.mass = mass;
-        this.size = Math.sqrt(Math.sqrt(mass));
+        this.size = 100;
         this.draw = function(){};
         this.oncontact = function(){};
         return this;
     };
     
+    function planet(x, y, mass, vx, vy){
+        var that = new node(x, y, mass, vx, vy);
+        that.icon = new Image();
+        that.icon.src = 'img/planet' + Math.floor(rnd() * 5) + '.png';
+        that.draw = FX.draw_icon;
+        that.size = mass;
+        return that;
+    }
+    
     function star(x, y, mass, vx, vy){
         var that = new node(x, y, mass, vx, vy);
-        that.color_r = 150 + Math.floor(rnd() * 100);
-        that.color_g = 150 + Math.floor(rnd() * 100);
-        that.color_b = 150 + Math.floor(rnd() * 100);
+        that.color_r = 100 + Math.floor(rnd() * 150);
+        that.color_g = 100 + Math.floor(rnd() * 150);
+        that.color_b = 100 + Math.floor(rnd() * 150);
+        that.icon = new Image();
+        that.icon.src = 'img/star.png';
         that.draw = FX.draw_star;
-        that.oncontact = eat;
+        that.size = 2*Math.sqrt(mass);
+        //that.oncontact = eat;
         return that;
     }
     
@@ -70,14 +83,21 @@
     };
     
     S.init_world = function(){
-        S.nodes.push(new star(rnd() * 3200 - 1600, rnd() * 3200 - 1600, rnd()*100000000, 0, 0));
-        S.nodes.push(new star(rnd() * 3200 - 1600, rnd() * 3200 - 1600, rnd()*1000000, 0, 0));
-        S.nodes.push(new star(rnd() * 3200 - 1600, rnd() * 3200 - 1600, rnd()*1000000, 0, 0));
+        S.nodes.push(new star(rnd() * 3200 - 1600, rnd() * 3200 - 1600, rnd()*300000, 0, 0));
+        S.nodes.push(new star(rnd() * 3200 - 1600, rnd() * 3200 - 1600, rnd()*100000, 0, 0));
+        S.nodes.push(new planet(rnd() * 3200 - 1600, rnd() * 3200 - 1600, rnd()*200, 0, 0));
+        S.nodes.push(new planet(rnd() * 3200 - 1600, rnd() * 3200 - 1600, rnd()*200, 0, 0));
         S.shipindex = S.nodes.length;
-        S.nodes.push(new ship(S.nodes[0].x - 400, S.nodes[0].y-400, 1, 2, 0, 0));
+        S.nodes.push(new ship(S.nodes[1].x - 200, S.nodes[1].y-200, 1, 2, 0, 0));
+        S.nodes.push(new star(rnd() * 3200 - 1600, rnd() * 3200 - 1600, rnd()*100000, 0, 0));
+        S.nodes.push(new star(rnd() * 3200 - 1600, rnd() * 3200 - 1600, rnd()*100000, 0, 0));
+        S.nodes.push(new planet(rnd() * 3200 - 1600, rnd() * 3200 - 1600, rnd()*200, 0, 0));
+        S.nodes.push(new planet(rnd() * 3200 - 1600, rnd() * 3200 - 1600, rnd()*200, 0, 0));
+        S.nodes.push(new planet(rnd() * 3200 - 1600, rnd() * 3200 - 1600, rnd()*200, 0, 0));
         put_on_orbit(S.nodes[0], S.nodes[1]);
         put_on_orbit(S.nodes[0], S.nodes[2]);
-        put_on_orbit(S.nodes[0], S.nodes[3]);
+        put_on_orbit(S.nodes[1], S.nodes[3]);
+        put_on_orbit(S.nodes[1], S.nodes[4]);
 
         S.masscount = S.shipindex;
     };

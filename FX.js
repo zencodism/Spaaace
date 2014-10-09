@@ -1,7 +1,7 @@
 (function(FX){
     var canvas = document.getElementById("screen"),
         ctx = canvas.getContext("2d"),
-        zoom = 10,
+        zoom = 6,
         pov = {track: 0, x: 0, y: 0};
         
     FX.setPov = function(e){
@@ -53,23 +53,35 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     };
     
+    FX.draw_icon = function(){
+        var scr = FX.translate_coords(this.x, this.y, this.size);
+        ctx.translate(scr.x, scr.y);
+        ctx.drawImage(this.icon, -scr.s/2, -scr.s/2, scr.s, scr.s);
+        ctx.translate(-scr.x, -scr.y);
+    };
+    
     FX.draw_star = function(){
         var scr = FX.translate_coords(this.x, this.y, this.size);
+        ctx.translate(scr.x, scr.y);
         ctx.beginPath();
-        ctx.arc(scr.x, scr.y, scr.s*8, 0, 2*Math.PI);
-        var grad = ctx.createRadialGradient(scr.x, scr.y, scr.s, scr.x, scr.y, scr.s*8);
-        grad.addColorStop(0, 'rgba(' + this.color_r + ', ' + this.color_g + ', ' + this.color_b + ', 1.0)');
-        grad.addColorStop(0.1, 'rgba(' + this.color_r + ', ' + this.color_g + ', ' + this.color_b + ', 0.3)');
+        ctx.arc(0, 0, scr.s*2, 0, 2*Math.PI);
+        var grad = ctx.createRadialGradient(0, 0, scr.s/4, 0, 0, scr.s*2);
+        grad.addColorStop(0, 'rgba(' + this.color_r + ', ' + this.color_g + ', ' + this.color_b + ', 0.6)');
+        grad.addColorStop(0.1, 'rgba(' + this.color_r + ', ' + this.color_g + ', ' + this.color_b + ', 0.2)');
         grad.addColorStop(1, 'rgba(' + this.color_r + ', ' + this.color_g + ', ' + this.color_b + ', 0.0)');
         ctx.fillStyle = grad;
         ctx.fill();
+        
+        ctx.drawImage(this.icon, -scr.s, -scr.s, 2*scr.s, 2*scr.s);
+        ctx.translate(-scr.x, -scr.y);
     };
+
 
     FX.draw_ship = function(){
         var scr = FX.translate_coords(this.x, this.y, this.size);
         ctx.translate(scr.x, scr.y);
         ctx.rotate(this.rotation);
-        ctx.drawImage(this.icon, -20, -20, 40, 40);
+        ctx.drawImage(this.icon, -10, -10, 20, 20);
         ctx.rotate(-this.rotation);
         ctx.translate(-scr.x, -scr.y);
     };
