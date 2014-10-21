@@ -1,49 +1,30 @@
-var fpscount = document.getElementById("fps")
-    , objcount = document.getElementById("objcount")
-    , ripples = []
-    , frameId = NaN
-    , dt
-    , tprev;
+var fpscount = document.getElementById("fps"),
+    objcount = document.getElementById("objcount"),
+    ripples = [],
+    traces = [],
+    frameId = NaN,
+    dt,
+    tprev;
 
 function init(){
     dt = Date.now();
-    tprev = dt;
+    tprev = dt-200;
     CTRL.init_controls();
     S.init_world();
 }
 
-function calcDV(node){
-    if(node.mass <= 0) return;
-    for(var j = 0; j < S.masscount; j++){
-        if(node == S.nodes[j]) continue;
-        var a = node, b = S.nodes[j];
-        if(b.mass <= 0) continue;
-        var dx = b.x - a.x,
-            dy = b.y - a.y,
-            far = Math.sqrt(dx * dx + dy * dy);
-        if(far < a.size+b.size)
-        {
-            a.oncontact(b); // affects both a and b
-            continue;
-        }
-        var force = (S.G * a.mass * b.mass) / (far * far );
-        a.lvx = a.vx;
-        a.lvy = a.vy;
-        a.vx += force * dx / far / a.mass;
-        a.vy += force * dy / far / a.mass;
-    }
-}
-
 function gravity() {
     for(var i = 0; i < S.nodes.length; i++){
-        calcDV(S.nodes[i]);
-    }
-        
-    for(var i = S.nodes.length-1; i >= 0; i--){  // cleanup of removed nodes
-        if(S.nodes[i].mass <= 0){
-            S.nodes.splice(i, 1);
-            S.masscount --;
-            S.shipindex --;
+        for(var j = 0; j < S.nodes.length; j++){
+            if(i == j) continue;
+            var a = S.nodes[i], b = S.nodes[j];
+            if(b.mass <= 1) continue;
+            var dx = b.x - a.x,
+                dy = b.y - a.y,
+                far = Math.sqrt(dx * dx + dy * dy),
+                force = (S.G * b.mass) / (far * far * far);
+            a.vx += force * dx;
+            a.vy += force * dy;
         }
     }
 }
@@ -54,12 +35,16 @@ function main_loop() {
     
     var ddt = Date.now() - dt;
     dt = Date.now();
-    var fps = Math.floor(1000/ddt);
+    var fps = Math.ceil(200/ddt);
     var ship = S.nodes[S.shipindex];
         
     if(dt - tprev >= 200){
         tprev = dt;
-        gravity();
+        gravity();    
+        S.nodes.forEach(function(node){
+            traces.push({x: node.x, y: node.y});
+        });
+        
         if(ship.thrust){
             ship.vx += ship.thrust * Math.cos(ship.rotation);
             ship.vy += ship.thrust * Math.sin(ship.rotation);
@@ -83,6 +68,11 @@ function main_loop() {
         node.y += node.vy / fps;
         node.draw();
     });
+    
+    for(var i = 0; i < traces.length; i++)
+        FX.draw_trace(traces[i]);
+    
+    
     s = CTRL.state(); 
     ship.rotation += s.rotation;
     ship.thrust = s.thrust;

@@ -94,5 +94,11 @@
         ctx.stroke();
         r.age += 1;
     };
+    
+    FX.draw_trace = function(t){
+        var scr = FX.translate_coords(t.x, t.y);
+        ctx.fillStyle = "#eeeeee";
+        ctx.fillRect(scr.x, scr.y, 1, 1);
+    };
 }
 (window.FX = window.FX || {}));
