@@ -1,5 +1,5 @@
 (function(S){
-    S.G = 1;
+    S.G = 20;
     S.nodes = [];
     S.masscount = 0;
     S.shipindex = 0;
@@ -41,7 +41,7 @@
         that.icon = new Image();
         that.icon.src = 'img/planet' + Math.floor(rnd() * 5) + '.png';
         that.draw = FX.draw_icon;
-        that.size = mass/5;
+        that.size = 2*Math.sqrt(mass);
         return that;
     }
     
@@ -76,20 +76,23 @@
             V = Math.sqrt(g * far / orbiter.mass );
         orbiter.vx = center.vx + dy * V / far;
         orbiter.vy = center.vy -dx * V / far;
-// optional. Works weird with little mass difference
-//        V2 =  Math.sqrt(g * far / center.mass);
-//        center.vx -= dy * V2 / far;
-//        center.vy += dx * V2 / far;
     };
     
     S.init_world = function(){
         S.nodes.push(new star(rnd() * 3200 - 1600, rnd() * 3200 - 1600, 300000, 0, 0));
-        S.nodes.push(new planet(S.nodes[0].x+2500, S.nodes[0].y-1940, 1000, 0, 0));
+        S.nodes.push(new planet(S.nodes[0].x+2500, S.nodes[0].y-1940, 5000, 0, 0));
         S.shipindex = S.nodes.length;
-        S.nodes.push(new ship(S.nodes[1].x+100, S.nodes[1].y-120, 1, 0, 0));
+        S.nodes.push(new ship(S.nodes[1].x+100, S.nodes[1].y-120, 0.2, 0, 0));
         put_on_orbit(S.nodes[0], S.nodes[1]);
         put_on_orbit(S.nodes[1], S.nodes[2]);
         S.masscount = S.shipindex;
+//        alert(JSON.stringify(S.nodes, function(key, value) {
+//  if (typeof value === 'function') {
+//    return value.toString();
+//  } else {
+//    return value;
+//  }
+//}));
     };
 }
 (window.S = window.S || {}));

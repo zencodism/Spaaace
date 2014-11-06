@@ -5,18 +5,39 @@ html, body { width:100%; height:100%; } /* just to be sure these are full screen
 canvas { display:block; } /* To remove the scrollbars */
 
 html , body {
-	background: url("../img/bg.png"); 
 	color: #ccf; 
 	font-family: Helvetica;
 	text-align: center;
+    background: url("../img/bg.png"); 
+}
+
+#wrap{
+    position: relative;
+    width: 100%;
+    height: 100%;
+	background-image: url("../img/nebula.png"); 
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
 }
 
 #screen{
-    position: absolute top 0 left 0;
-    z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
 }
 
-#fps, #objcount{
-    display: inline-block;
-    z-index: 100;
+#log{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 450px;
+    height: 200px;
+    z-index: 3;
+    border: 2px solid #888888;
+}
+
+#messages{
+    max-height: 170px;
 }

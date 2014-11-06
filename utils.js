@@ -59,8 +59,7 @@ HTMLCanvasElement.prototype.relMouseCoords = relMouseCoords;
 
 (function() {
     "use strict";
-    var canvas = document.getElementById('screen'),
-        context = canvas.getContext('2d');
+    var canvas = document.getElementById('screen');
 
     // resize the canvas to fill browser window dynamically
     window.addEventListener('resize', resizeCanvas, false);

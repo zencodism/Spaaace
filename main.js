@@ -4,11 +4,11 @@ var fpscount = document.getElementById("fps"),
     traces = [],
     frameId = NaN,
     dt,
-    tprev;
+    nextDT;
 
 function init(){
     dt = Date.now();
-    tprev = dt-200;
+    nextDT = dt + 200;
     CTRL.init_controls();
     S.init_world();
 }
@@ -21,7 +21,7 @@ function gravity() {
             if(b.mass <= 1) continue;
             var dx = b.x - a.x,
                 dy = b.y - a.y,
-                far = Math.sqrt(dx * dx + dy * dy),
+                far = Math.sqrt(dx * dx + dy * dy) + 1,
                 force = (S.G * b.mass) / (far * far * far);
             a.vx += force * dx;
             a.vy += force * dy;
@@ -38,12 +38,12 @@ function main_loop() {
     var fps = Math.ceil(200/ddt);
     var ship = S.nodes[S.shipindex];
         
-    if(dt - tprev >= 200){
-        tprev = dt;
+    if(dt > nextDT){
+        nextDT = dt + 200;
         gravity();    
-        S.nodes.forEach(function(node){
-            traces.push({x: node.x, y: node.y});
-        });
+//        S.nodes.forEach(function(node){
+//            traces.push({x: node.x, y: node.y});
+//        });
         
         if(ship.thrust){
             ship.vx += ship.thrust * Math.cos(ship.rotation);
@@ -51,8 +51,9 @@ function main_loop() {
             ripples.unshift({x: ship.x, y: ship.y, age: 0});
         }
         if(ripples.length > 40 || (ripples.length > 0 && ripples[ripples.length-1].age > 40)    ) ripples.pop();
-//        fpscount.innerHTML = "FPS: " + fps;
-//        objcount.innerHTML = "Objects population: " + (S.nodes.length);
+        fpscount.innerHTML = "FPS: " + fps * 5;
+        objcount.innerHTML = "Objects population: " + (S.nodes.length);
+        document.getElementById("messages").innerHTML += dt + "<br/>";
     }
     
     if(ship.thrust && !ripples.length)
@@ -69,8 +70,8 @@ function main_loop() {
         node.draw();
     });
     
-    for(var i = 0; i < traces.length; i++)
-        FX.draw_trace(traces[i]);
+//    for(var i = 0; i < traces.length; i++)
+//        FX.draw_trace(traces[i]);
     
     
     s = CTRL.state(); 

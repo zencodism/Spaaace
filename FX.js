@@ -1,11 +1,11 @@
 (function(FX){
     var canvas = document.getElementById("screen"),
         ctx = canvas.getContext("2d"),
-        zoom = 6,
+        zoom = 8,
         pov = {track: 0, x: 0, y: 0};
         
     FX.setPov = function(e){
-        var coords = e;//FX.relMouseCoords(e);
+        var coords = canvas.relMouseCoords(e);
         pov.track = false;
         pov.x += (coords.x - FX.width/2) * zoom;
         pov.y += (coords.y - FX.height/2) * zoom;
