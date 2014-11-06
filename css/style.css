@@ -40,4 +40,5 @@ html , body {
 
 #messages{
     max-height: 170px;
+    overflow-y: scroll;
 }
