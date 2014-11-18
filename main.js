@@ -1,5 +1,6 @@
 var fpscount = document.getElementById("fps"),
     objcount = document.getElementById("objcount"),
+    messages = document.getElementById("messages"),
     ripples = [],
     traces = [],
     frameId = NaN,
@@ -11,6 +12,11 @@ function init(){
     nextDT = dt + 200;
     CTRL.init_controls();
     S.init_world();
+    document.getElementById("feeder").onclick = function(e){
+        S.add_random_object();
+        e.stopPropagation();
+        return false;
+    }
 }
 
 function gravity() {
@@ -25,12 +31,20 @@ function gravity() {
                 force = (S.G * b.mass) / (far * far * far);
             a.vx += force * dx;
             a.vy += force * dy;
+            if(far / 2 > a.size + b.size){
+                a.oncontact(b);
+            }
+            if(b.type == 'star' && a.type == 'planet'){
+                a.lightangle = -Math.acos(dx/far);
+                if(dy < 0) a.lightangle *= -1;
+            }
         }
     }
 }
 
 function main_loop() {
     FX.clear();
+    FX.update_pov();
     frameId = requestAnimationFrame(main_loop);
     
     var ddt = Date.now() - dt;
@@ -53,21 +67,19 @@ function main_loop() {
         if(ripples.length > 40 || (ripples.length > 0 && ripples[ripples.length-1].age > 40)    ) ripples.pop();
         fpscount.innerHTML = "FPS: " + fps * 5;
         objcount.innerHTML = "Objects population: " + (S.nodes.length);
-        document.getElementById("messages").innerHTML += dt + "<br/>";
+        //messages.innerHTML = dt + "<br/>";
     }
     
     if(ship.thrust && !ripples.length)
         ripples.unshift({x: ship.x, y: ship.y, age: 0});
     
-    FX.update_pov();
-
     for(var i = 0; i < ripples.length; i++)
         FX.draw_ripple(ripples[i]);
 
     S.nodes.forEach(function(node){
+        node.draw();
         node.x += node.vx / fps;
         node.y += node.vy / fps;
-        node.draw();
     });
     
 //    for(var i = 0; i < traces.length; i++)

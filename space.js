@@ -6,7 +6,7 @@
     var rnd = Math.random;
     
     var eat = function(a){
-        if(this.mass == 1 || a.mass == 1) return;
+        //if(this.mass == 1 || a.mass == 1) return;
         var winner, other;
         if(this.mass > a.mass){
             winner = this;
@@ -25,6 +25,7 @@
     };        
 
     function node(x, y, mass, vx, vy){
+        this.type = 'node';
         this.x = x;
         this.y = y;
         this.vx = vx;
@@ -38,15 +39,19 @@
     
     function planet(x, y, mass, vx, vy){
         var that = new node(x, y, mass, vx, vy);
+        that.type = 'planet';
         that.icon = new Image();
-        that.icon.src = 'img/planet' + Math.floor(rnd() * 5) + '.png';
+        that.icon.src = 'img/planeta' + Math.floor(rnd() * 6) + '.png';
         that.draw = FX.draw_icon;
         that.size = 2*Math.sqrt(mass);
+        that.farlight = Infinity;
+        that.lightangle = 0;
         return that;
     }
     
     function star(x, y, mass, vx, vy){
         var that = new node(x, y, mass, vx, vy);
+        that.type = 'star';
         that.color_r = 100 + Math.floor(rnd() * 150);
         that.color_g = 100 + Math.floor(rnd() * 150);
         that.color_b = 100 + Math.floor(rnd() * 150);
@@ -54,12 +59,13 @@
         that.icon.src = 'img/star.png';
         that.draw = FX.draw_star;
         that.size = 2*Math.sqrt(mass);
-        //that.oncontact = eat;
+      //  that.oncontact = eat;
         return that;
     }
     
     function ship(x, y, mass, vx, vy){
         var that = new node(x, y, mass, vx, vy);
+        that.type = 'ship';
         that.icon = new Image();
         that.icon.src = 'img/rocket.png';
         that.rotation = -Math.PI/4;
@@ -86,13 +92,13 @@
         put_on_orbit(S.nodes[0], S.nodes[1]);
         put_on_orbit(S.nodes[1], S.nodes[2]);
         S.masscount = S.shipindex;
-//        alert(JSON.stringify(S.nodes, function(key, value) {
-//  if (typeof value === 'function') {
-//    return value.toString();
-//  } else {
-//    return value;
-//  }
-//}));
     };
+    
+    S.add_random_object = function(){
+        if(rnd() > 0.7)
+            S.nodes.push(new star(rnd() * 6400 - 3200, rnd() * 6400 - 3200, 10000 + rnd()*500000, rnd()*100-50, rnd()*100-50));
+        else
+            S.nodes.push(new planet(rnd() * 6400 - 3200, rnd() * 6400 - 3200, 1000 + rnd()*10000, rnd()*100-50, rnd()*100-50));
+    }
 }
 (window.S = window.S || {}));

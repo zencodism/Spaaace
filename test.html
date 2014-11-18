@@ -1,0 +1,49 @@
+<html>
+<body>
+    <div id="wrap">
+        <canvas id="screen" width="450px" height="450px"></canvas>
+    </div>
+</body>
+<script type="text/javascript">
+    var canvas = document.getElementById("screen"),
+        ctx = canvas.getContext("2d");
+
+    var drawrect = function () {
+        ctx.fillStyle = this.color;
+        ctx.translate(this.x+10, this.y+10);
+        ctx.rotate(this.rotation);
+        ctx.fillRect(-10, -10, 20, 20);
+        ctx.rotate(-this.rotation);
+        ctx.translate(-this.x-10, -this.y-10);
+    };
+
+    var red = {
+        x: 22,
+        y: 22,
+        rotation: 0,
+        color: "#ff0000",
+        draw: drawrect
+    };
+    
+    var blu = {
+        x: 22,
+        y: 111,
+        rotation: 0,
+        color: "#0000ff",
+        draw: drawrect
+    };
+
+    function main_loop() {
+        ctx.clearRect(0, 0, 450, 450);
+        frameId = requestAnimationFrame(main_loop);
+        red.draw();
+        red.x += 1;
+        red.rotation +=0.1;
+        blu.draw();
+        blu.x += 1;
+        blu.rotation -=0.1;
+    }
+
+    main_loop();
+</script>
+</html>

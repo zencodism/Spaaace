@@ -2,13 +2,22 @@
     var canvas = document.getElementById("screen"),
         ctx = canvas.getContext("2d"),
         zoom = 8,
-        pov = {track: 0, x: 0, y: 0};
+        pov = {track: 0, x: 0, y: 0},
+        ship_canvas = document.getElementById("ship"),
+        sctx = ship_canvas.getContext("2d"),
+        shadow_canvas = document.getElementById("shadow"),
+        shctx = shadow_canvas.getContext("2d"),
+        shadow_icon = new Image();
+    
+    shadow_icon.src = 'img/shade.png';
+    shctx.translate(400, 400);
+    sctx.translate(60, 60);
         
     FX.setPov = function(e){
         var coords = canvas.relMouseCoords(e);
         pov.track = false;
-        pov.x += (coords.x - FX.width/2) * zoom;
-        pov.y += (coords.y - FX.height/2) * zoom;
+        pov.x += (coords.x - canvas.width/2) * zoom;
+        pov.y += (coords.y - canvas.height/2) * zoom;
         var min = {i: -1, val: Infinity};
         for(var i = 0; i < S.nodes.length; i++){
             var node = S.nodes[i];
@@ -51,39 +60,40 @@
 
     FX.clear = function(){
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        sctx.clearRect(-60, -60, 120, 120);
     };
     
     FX.draw_icon = function(){
         var scr = FX.translate_coords(this.x, this.y, this.size);
-        ctx.translate(scr.x, scr.y);
-        ctx.drawImage(this.icon, -scr.s/2, -scr.s/2, scr.s, scr.s);
-        ctx.translate(-scr.x, -scr.y);
+        shctx.clearRect(0, 0, 800, 800);
+        shctx.drawImage(this.icon, -400, -400);
+        shctx.rotate(-this.lightangle);
+        shctx.drawImage(shadow_icon, -400, -400);
+        shctx.rotate(this.lightangle);
+        ctx.drawImage(shadow_canvas, scr.x - scr.s/2, scr.y - scr.s/2, scr.s, scr.s);
     };
     
     FX.draw_star = function(){
         var scr = FX.translate_coords(this.x, this.y, this.size);
-        ctx.translate(scr.x, scr.y);
         ctx.beginPath();
-        ctx.arc(0, 0, scr.s*2, 0, 2*Math.PI);
-        var grad = ctx.createRadialGradient(0, 0, scr.s/4, 0, 0, scr.s*2);
+        ctx.arc(scr.x, scr.y, scr.s*2, 0, 2*Math.PI);
+        var grad = ctx.createRadialGradient(scr.x, scr.y, scr.s/4, scr.x, scr.y, scr.s*2);
         grad.addColorStop(0, 'rgba(' + this.color_r + ', ' + this.color_g + ', ' + this.color_b + ', 0.6)');
         grad.addColorStop(0.1, 'rgba(' + this.color_r + ', ' + this.color_g + ', ' + this.color_b + ', 0.2)');
         grad.addColorStop(1, 'rgba(' + this.color_r + ', ' + this.color_g + ', ' + this.color_b + ', 0.0)');
         ctx.fillStyle = grad;
         ctx.fill();
         
-        ctx.drawImage(this.icon, -scr.s, -scr.s, 2*scr.s, 2*scr.s);
-        ctx.translate(-scr.x, -scr.y);
+        ctx.drawImage(this.icon, scr.x - scr.s, scr.y - scr.s, 2*scr.s, 2*scr.s);
     };
 
 
     FX.draw_ship = function(){
         var scr = FX.translate_coords(this.x, this.y, this.size);
-        ctx.translate(scr.x, scr.y);
-        ctx.rotate(this.rotation);
-        ctx.drawImage(this.icon, -10, -10, 20, 20);
-        ctx.rotate(-this.rotation);
-        ctx.translate(-scr.x, -scr.y);
+        sctx.rotate(this.rotation);
+        sctx.drawImage(this.icon, -57, -46, 114, 92);
+        sctx.rotate(-this.rotation);
+        ctx.drawImage(ship_canvas, scr.x-10, scr.y-10, 20, 20);        
     };
 
     FX.draw_ripple = function(r){
