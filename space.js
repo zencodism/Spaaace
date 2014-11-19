@@ -41,7 +41,7 @@
         var that = new node(x, y, mass, vx, vy);
         that.type = 'planet';
         that.icon = new Image();
-        that.icon.src = 'img/planeta' + Math.floor(rnd() * 6) + '.png';
+        that.icon.src = 'img/planet' + Math.floor(rnd() * 6) + '.png';
         that.draw = FX.draw_icon;
         that.size = 2*Math.sqrt(mass);
         that.farlight = Infinity;
