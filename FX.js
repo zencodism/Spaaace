@@ -11,7 +11,7 @@
     
     shadow_icon.src = 'img/shade.png';
     shctx.translate(400, 400);
-    sctx.translate(60, 60);
+    sctx.translate(100, 100);
         
     FX.setPov = function(e){
         var coords = canvas.relMouseCoords(e);
@@ -60,7 +60,7 @@
 
     FX.clear = function(){
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        sctx.clearRect(-60, -60, 120, 120);
+        sctx.clearRect(-100, -100, 200, 200);
     };
     
     FX.draw_icon = function(){
@@ -91,9 +91,9 @@
     FX.draw_ship = function(){
         var scr = FX.translate_coords(this.x, this.y, this.size);
         sctx.rotate(this.rotation);
-        sctx.drawImage(this.icon, -57, -46, 114, 92);
+        sctx.drawImage(this.icon, -100, -100);
         sctx.rotate(-this.rotation);
-        ctx.drawImage(ship_canvas, scr.x-10, scr.y-10, 20, 20);        
+        ctx.drawImage(ship_canvas, scr.x-scr.s/2, scr.y-scr.s/2, scr.s, scr.s);        
     };
 
     FX.draw_ripple = function(r){
