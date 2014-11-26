@@ -41,7 +41,10 @@
         var that = new node(x, y, mass, vx, vy);
         that.type = 'planet';
         that.icon = new Image();
-        that.icon.src = 'img/planet' + Math.floor(rnd() * 6) + '.png';
+        that.s_icon = new Image();
+        var ending = Math.floor(rnd() * 6) + '.png';
+        that.icon.src = 'img/planet' + ending; 
+        that.s_icon.src = 'img/s_planet' + ending;
         that.draw = FX.draw_icon;
         that.size = 2*Math.sqrt(mass);
         that.farlight = Infinity;
@@ -74,6 +77,17 @@
         return that;
     }
     
+    function gate(x, y, mass, vx, vy){
+        var that = new node(x, y, mass, vx, vy);
+        that.type = 'gate';
+        that.icon = new Image();
+        that.icon.src = 'img/sprites.png';
+        that.draw = FX.draw_gate;
+        that.frame = 0;
+        that.size = 128;
+        return that;
+    }
+    
     function put_on_orbit(center, orbiter){
         var dx = center.x - orbiter.x,
             dy = center.y - orbiter.y,
@@ -88,10 +102,12 @@
         S.nodes.push(new star(rnd() * 3200 - 1600, rnd() * 3200 - 1600, 300000, 0, 0));
         S.nodes.push(new planet(S.nodes[0].x+2500, S.nodes[0].y-1940, 5000, 0, 0));
         S.shipindex = S.nodes.length;
-        S.nodes.push(new ship(S.nodes[1].x+100, S.nodes[1].y-120, 0.2, 0, 0));
+        S.nodes.push(new ship(S.nodes[1].x+100, S.nodes[1].y-120, 1, 0, 0));
         put_on_orbit(S.nodes[0], S.nodes[1]);
         put_on_orbit(S.nodes[1], S.nodes[2]);
         S.masscount = S.shipindex;
+        S.nodes.push(new gate(S.nodes[2].x - 150, S.nodes[2].y + 100, 1, 0, 0));
+        put_on_orbit(S.nodes[1], S.nodes[3]);
     };
     
     S.add_random_object = function(){

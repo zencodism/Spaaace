@@ -7,9 +7,11 @@
         sctx = ship_canvas.getContext("2d"),
         shadow_canvas = document.getElementById("shadow"),
         shctx = shadow_canvas.getContext("2d"),
-        shadow_icon = new Image();
+        shadow_icon = new Image(),
+        s_shadow_icon = new Image();
     
     shadow_icon.src = 'img/shade.png';
+    s_shadow_icon.src = 'img/s_shade.png';
     shctx.translate(400, 400);
     sctx.translate(100, 100);
         
@@ -53,9 +55,9 @@
     FX.height = canvas.height;
     
     FX.translate_coords = function(x, y, size){
-        return {x: Math.floor((x - pov.x) / zoom + canvas.width/2) ,
-                y: Math.floor((y - pov.y) / zoom + canvas.height/2) ,
-                s : Math.floor(size / zoom + 2) };
+        return {x: Math.round((x - pov.x) / zoom + canvas.width/2) ,
+                y: Math.round((y - pov.y) / zoom + canvas.height/2) ,
+                s : Math.round(size / zoom + 2) };
     };
 
     FX.clear = function(){
@@ -65,12 +67,29 @@
     
     FX.draw_icon = function(){
         var scr = FX.translate_coords(this.x, this.y, this.size);
-        shctx.clearRect(0, 0, 800, 800);
-        shctx.drawImage(this.icon, -400, -400);
-        shctx.rotate(-this.lightangle);
-        shctx.drawImage(shadow_icon, -400, -400);
-        shctx.rotate(this.lightangle);
-        ctx.drawImage(shadow_canvas, scr.x - scr.s/2, scr.y - scr.s/2, scr.s, scr.s);
+        shctx.clearRect(-400, -400, 800, 800);
+        if(scr.s > 100){
+            shctx.drawImage(this.icon, -400, -400);
+            shctx.rotate(-this.lightangle);
+            shctx.drawImage(shadow_icon, -400, -400);
+            shctx.rotate(this.lightangle);
+            ctx.drawImage(shadow_canvas, scr.x - scr.s/2, scr.y - scr.s/2, scr.s, scr.s);
+        }
+        else{
+            shctx.drawImage(this.s_icon, -50, -50);
+            shctx.rotate(-this.lightangle);
+            shctx.drawImage(s_shadow_icon, -50, -50);
+            shctx.rotate(this.lightangle);
+            ctx.drawImage(shadow_canvas, 350, 350, 100, 100, scr.x - scr.s/2, scr.y - scr.s/2, scr.s, scr.s);
+        }
+    };
+    
+    
+    FX.draw_gate = function(){
+        var scr = FX.translate_coords(this.x, this.y, this.size);
+        ctx.drawImage(this.icon, 128*this.frame, 0, 128, 128, scr.x - scr.s/2, scr.y - scr.s/2, scr.s, scr.s);
+        this.frame ++;
+        this.frame %= 30;
     };
     
     FX.draw_star = function(){
