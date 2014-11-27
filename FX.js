@@ -21,8 +21,8 @@
         pov.x += (coords.x - canvas.width/2) * zoom;
         pov.y += (coords.y - canvas.height/2) * zoom;
         var min = {i: -1, val: Infinity};
-        for(var i = 0; i < S.nodes.length; i++){
-            var node = S.nodes[i];
+        for(var i = 0; i < LVL.nodes.length; i++){
+            var node = LVL.nodes[i];
             var far = Math.sqrt((node.x - pov.x)*(node.x-pov.x) + (node.y - pov.y)*(node.y-pov.y));
             if(far < min.val){
                 min.i = i;
@@ -30,9 +30,9 @@
             }
         }
         if(min.val < 50*zoom){
-            pov.track = S.nodes[min.i];
-            pov.x = S.nodes[min.i].x;
-            pov.y = S.nodes[min.i].y;
+            pov.track = LVL.nodes[min.i];
+            pov.x = LVL.nodes[min.i].x;
+            pov.y = LVL.nodes[min.i].y;
         }
     };
     
@@ -57,7 +57,7 @@
     FX.translate_coords = function(x, y, size){
         return {x: Math.round((x - pov.x) / zoom + canvas.width/2) ,
                 y: Math.round((y - pov.y) / zoom + canvas.height/2) ,
-                s : Math.round(size / zoom + 2) };
+                s : Math.round(size / zoom + 1) };
     };
 
     FX.clear = function(){
@@ -65,8 +65,7 @@
         sctx.clearRect(-100, -100, 200, 200);
     };
     
-    FX.draw_icon = function(){
-        var scr = FX.translate_coords(this.x, this.y, this.size);
+    FX.draw_icon = function(scr){
         shctx.clearRect(-400, -400, 800, 800);
         if(scr.s > 100){
             shctx.drawImage(this.icon, -400, -400);
@@ -84,16 +83,13 @@
         }
     };
     
-    
-    FX.draw_gate = function(){
-        var scr = FX.translate_coords(this.x, this.y, this.size);
+    FX.draw_gate = function(scr){
         ctx.drawImage(this.icon, 128*this.frame, 0, 128, 128, scr.x - scr.s/2, scr.y - scr.s/2, scr.s, scr.s);
         this.frame ++;
         this.frame %= 30;
     };
     
-    FX.draw_star = function(){
-        var scr = FX.translate_coords(this.x, this.y, this.size);
+    FX.draw_star = function(scr){
         ctx.beginPath();
         ctx.arc(scr.x, scr.y, scr.s*2, 0, 2*Math.PI);
         var grad = ctx.createRadialGradient(scr.x, scr.y, scr.s/4, scr.x, scr.y, scr.s*2);
@@ -107,8 +103,7 @@
     };
 
 
-    FX.draw_ship = function(){
-        var scr = FX.translate_coords(this.x, this.y, this.size);
+    FX.draw_ship = function(scr){
         sctx.rotate(this.rotation);
         sctx.drawImage(this.icon, -100, -100);
         sctx.rotate(-this.rotation);
@@ -129,5 +124,13 @@
         ctx.fillStyle = "#eeeeee";
         ctx.fillRect(scr.x, scr.y, 1, 1);
     };
+    
+    FX.draw_frame = function(arr){
+        for(var i = 0; i < arr.length; i++){
+            var scr = FX.translate_coords(arr[i].x, arr[i].y, arr[i].size);
+            if(scr.x > -scr.s && scr.x > -scr.s && scr.x < canvas.width + scr.s && scr.y < canvas.height + scr.s)
+                arr[i].draw(scr);
+        }
+    }
 }
 (window.FX = window.FX || {}));

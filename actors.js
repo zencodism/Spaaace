@@ -1,12 +1,8 @@
-(function(S){
-    S.G = 20;
-    S.nodes = [];
-    S.masscount = 0;
-    S.shipindex = 0;
+(function(ACTS){
     var rnd = Math.random;
     
     var eat = function(a){
-        //if(this.mass == 1 || a.mass == 1) return;
+        if(this.mass < 100 || a.mass < 100) return;
         var winner, other;
         if(this.mass > a.mass){
             winner = this;
@@ -24,7 +20,7 @@
         other.size = 0;
     };        
 
-    function node(x, y, mass, vx, vy){
+    ACTS.node = function(x, y, mass, vx, vy){
         this.type = 'node';
         this.x = x;
         this.y = y;
@@ -37,8 +33,8 @@
         return this;
     };
     
-    function planet(x, y, mass, vx, vy){
-        var that = new node(x, y, mass, vx, vy);
+    ACTS.planet = function(x, y, mass, vx, vy){
+        var that = new ACTS.node(x, y, mass, vx, vy);
         that.type = 'planet';
         that.icon = new Image();
         that.s_icon = new Image();
@@ -52,8 +48,8 @@
         return that;
     }
     
-    function star(x, y, mass, vx, vy){
-        var that = new node(x, y, mass, vx, vy);
+    ACTS.star = function(x, y, mass, vx, vy){
+        var that = new ACTS.node(x, y, mass, vx, vy);
         that.type = 'star';
         that.color_r = 100 + Math.floor(rnd() * 150);
         that.color_g = 100 + Math.floor(rnd() * 150);
@@ -62,12 +58,12 @@
         that.icon.src = 'img/star.png';
         that.draw = FX.draw_star;
         that.size = 2*Math.sqrt(mass);
-      //  that.oncontact = eat;
+        //that.oncontact = eat;
         return that;
     }
     
-    function ship(x, y, mass, vx, vy){
-        var that = new node(x, y, mass, vx, vy);
+    ACTS.ship = function(x, y, mass, vx, vy){
+        var that = new ACTS.node(x, y, mass, vx, vy);
         that.type = 'ship';
         that.icon = new Image();
         that.icon.src = 'img/rocket.png';
@@ -77,8 +73,8 @@
         return that;
     }
     
-    function gate(x, y, mass, vx, vy){
-        var that = new node(x, y, mass, vx, vy);
+    ACTS.gate = function(x, y, mass, vx, vy){
+        var that = new ACTS.node(x, y, mass, vx, vy);
         that.type = 'gate';
         that.icon = new Image();
         that.icon.src = 'img/sprites.png';
@@ -87,34 +83,5 @@
         that.size = 128;
         return that;
     }
-    
-    function put_on_orbit(center, orbiter){
-        var dx = center.x - orbiter.x,
-            dy = center.y - orbiter.y,
-            far = Math.sqrt(dx * dx + dy * dy),
-            g =  (S.G * center.mass * orbiter.mass) / (far * far ),
-            V = Math.sqrt(g * far / orbiter.mass );
-        orbiter.vx = center.vx + dy * V / far;
-        orbiter.vy = center.vy -dx * V / far;
-    };
-    
-    S.init_world = function(){
-        S.nodes.push(new star(rnd() * 3200 - 1600, rnd() * 3200 - 1600, 300000, 0, 0));
-        S.nodes.push(new planet(S.nodes[0].x+2500, S.nodes[0].y-1940, 5000, 0, 0));
-        S.shipindex = S.nodes.length;
-        S.nodes.push(new ship(S.nodes[1].x+100, S.nodes[1].y-120, 1, 0, 0));
-        put_on_orbit(S.nodes[0], S.nodes[1]);
-        put_on_orbit(S.nodes[1], S.nodes[2]);
-        S.masscount = S.shipindex;
-        S.nodes.push(new gate(S.nodes[2].x - 150, S.nodes[2].y + 100, 1, 0, 0));
-        put_on_orbit(S.nodes[1], S.nodes[3]);
-    };
-    
-    S.add_random_object = function(){
-        if(rnd() > 0.7)
-            S.nodes.push(new star(rnd() * 6400 - 3200, rnd() * 6400 - 3200, 10000 + rnd()*500000, rnd()*100-50, rnd()*100-50));
-        else
-            S.nodes.push(new planet(rnd() * 6400 - 3200, rnd() * 6400 - 3200, 1000 + rnd()*10000, rnd()*100-50, rnd()*100-50));
-    }
 }
-(window.S = window.S || {}));
+(window.ACTS = window.ACTS || {}));
