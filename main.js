@@ -3,9 +3,10 @@ var fpscount = document.getElementById("fps"),
     messages = document.getElementById("messages"),
     ripples = [],
     traces = [],
-    frameId = NaN,
     dt,
     nextDT;
+
+window.frameId = NaN;
 
 function init(){
     dt = Date.now();
@@ -22,7 +23,7 @@ function init(){
 function main_loop() {
     FX.clear();
     FX.update_pov();
-    frameId = requestAnimationFrame(main_loop);
+    window.frameId = requestAnimationFrame(main_loop);
     
     var ddt = Date.now() - dt;
     dt = Date.now();
@@ -31,7 +32,8 @@ function main_loop() {
         
     if(dt > nextDT){
         nextDT = dt + 200;
-        PHYS.gravity(LVL.nodes);    
+        PHYS.gravity(LVL.nodes); 
+        LVL.clear_dead();
 //        S.nodes.forEach(function(node){
 //            traces.push({x: node.x, y: node.y});
 //        });

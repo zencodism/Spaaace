@@ -1,24 +1,19 @@
 (function(ACTS){
     var rnd = Math.random;
     
-    var eat = function(a){
-        if(this.mass < 100 || a.mass < 100) return;
-        var winner, other;
-        if(this.mass > a.mass){
-            winner = this;
-            other = a;
-        }
-        else{
-            winner = a;
-            other = this;
-        }
-        winner.x += other.x * (other.mass / (other.mass + winner.mass));
-        winner.y += other.y * (other.mass / (other.mass + winner.mass));
-        winner.mass += other.mass;
-        winner.size += Math.sqrt(other.size);
-        other.mass = 0;
-        other.size = 0;
+    var eat = function(target){
+        if(this.mass < target.mass) return;
+        this.vx += target.vx * (target.mass / (target.mass + this.mass));
+        this.vy += target.vy * (target.mass / (target.mass + this.mass));
+        this.mass += target.mass;
+        this.size += Math.sqrt(target.size) / 2;
+        target.dying = true;
+        target.mass = 0;
     };        
+    
+    var harvest = function(target){
+        
+    }
 
     ACTS.node = function(x, y, mass, vx, vy){
         this.type = 'node';
@@ -30,6 +25,7 @@
         this.size = 100;
         this.draw = function(){};
         this.oncontact = function(){};
+        this.range = 0;
         return this;
     };
     
@@ -45,6 +41,8 @@
         that.size = 2*Math.sqrt(mass);
         that.farlight = Infinity;
         that.lightangle = 0;
+        that.oncontact = eat;
+        that.range = that.size * 2 / 3;
         return that;
     }
     
@@ -58,7 +56,8 @@
         that.icon.src = 'img/star.png';
         that.draw = FX.draw_star;
         that.size = 2*Math.sqrt(mass);
-        //that.oncontact = eat;
+        that.oncontact = eat;
+        that.range = that.size;
         return that;
     }
     
@@ -70,6 +69,8 @@
         that.rotation = -Math.PI/4;
         that.thrust = 0;
         that.draw = FX.draw_ship;
+        that.range = 1000;
+        that.oncontact = harvest;
         return that;
     }
     

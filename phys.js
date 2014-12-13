@@ -15,9 +15,8 @@
                     force = (PHYS.G * b.mass) / (far * far * far);
                 a.vx += force * dx;
                 a.vy += force * dy;
-                if(far / 2 > a.size + b.size){
-                    a.oncontact(b);
-                }
+                if(far < a.range) a.oncontact(b);
+                if(far < b.range) b.oncontact(a);
                 if(b.type == 'star' && a.type == 'planet' && a.farlight > far){
                     a.lightangle = -Math.acos(dx/far);
                     if(dy < 0) a.lightangle *= -1;

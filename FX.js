@@ -1,7 +1,6 @@
 (function(FX){
     var canvas = document.getElementById("screen"),
         ctx = canvas.getContext("2d"),
-        zoom = 8,
         pov = {track: 0, x: 0, y: 0},
         ship_canvas = document.getElementById("ship"),
         sctx = ship_canvas.getContext("2d"),
@@ -14,12 +13,14 @@
     s_shadow_icon.src = 'img/s_shade.png';
     shctx.translate(400, 400);
     sctx.translate(100, 100);
-        
+    
+    FX.zoom = 8;
+    
     FX.setPov = function(e){
         var coords = canvas.relMouseCoords(e);
         pov.track = false;
-        pov.x += (coords.x - canvas.width/2) * zoom;
-        pov.y += (coords.y - canvas.height/2) * zoom;
+        pov.x += (coords.x - canvas.width/2) * FX.zoom;
+        pov.y += (coords.y - canvas.height/2) * FX.zoom;
         var min = {i: -1, val: Infinity};
         for(var i = 0; i < LVL.nodes.length; i++){
             var node = LVL.nodes[i];
@@ -29,7 +30,7 @@
                 min.val = far;
             }
         }
-        if(min.val < 50*zoom){
+        if(min.val < 50 * FX.zoom){
             pov.track = LVL.nodes[min.i];
             pov.x = LVL.nodes[min.i].x;
             pov.y = LVL.nodes[min.i].y;
@@ -37,11 +38,11 @@
     };
     
     FX.zoom_out = function(){
-        zoom *= 2;
+        FX.zoom *= 2;
     };
     
     FX.zoom_in = function(){
-        zoom /= 2;
+        FX.zoom /= 2;
     };
     
     FX.update_pov = function(){
@@ -55,9 +56,9 @@
     FX.height = canvas.height;
     
     FX.translate_coords = function(x, y, size){
-        return {x: Math.round((x - pov.x) / zoom + canvas.width/2) ,
-                y: Math.round((y - pov.y) / zoom + canvas.height/2) ,
-                s : Math.round(size / zoom + 1) };
+        return {x: Math.round((x - pov.x) / FX.zoom + canvas.width/2) ,
+                y: Math.round((y - pov.y) / FX.zoom + canvas.height/2) ,
+                s : Math.round(size / FX.zoom + 1) };
     };
 
     FX.clear = function(){
@@ -104,10 +105,21 @@
 
 
     FX.draw_ship = function(scr){
+        ctx.beginPath();
+        ctx.moveTo(scr.x, scr.y);
+        ctx.arc(scr.x, scr.y, 100, this.rotation-0.3, this.rotation+0.3);
+        ctx.lineTo(scr.x, scr.y);
+        var grad = ctx.createRadialGradient(scr.x, scr.y, 1, scr.x, scr.y, 100);
+        grad.addColorStop(0, 'rgba(200, 200, 200, 0.6)');
+        grad.addColorStop(1, 'rgba(200, 200, 200, 0.0)');
+        ctx.fillStyle = grad;
+        ctx.fill();
+        
         sctx.rotate(this.rotation);
         sctx.drawImage(this.icon, -100, -100);
         sctx.rotate(-this.rotation);
-        ctx.drawImage(ship_canvas, scr.x-scr.s/2, scr.y-scr.s/2, scr.s, scr.s);        
+        ctx.drawImage(ship_canvas, scr.x-scr.s/2, scr.y-scr.s/2, scr.s, scr.s);
+        
     };
 
     FX.draw_ripple = function(r){

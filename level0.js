@@ -13,9 +13,7 @@
         PHYS.orbit(LVL.nodes[0], LVL.nodes[1]);
         PHYS.orbit(LVL.nodes[1], LVL.nodes[2]);
         LVL.masscount = LVL.shipindex;
-        LVL.nodes.push(new ACTS.gate(LVL.nodes[2].x - 150, LVL.nodes[2].y + 100, 1, 0, 0));
-        PHYS.orbit(LVL.nodes[1], LVL.nodes[3]);
-        for(var i = 0; i < 30; i++)
+        //for(var i = 0; i < 30; i++)
             LVL.add_random_object();
     };
     
@@ -25,5 +23,33 @@
         else
             LVL.nodes.push(new ACTS.planet(rnd() * 6400 - 3200, rnd() * 6400 - 3200, 1000 + rnd()*10000, rnd()*100-50, rnd()*100-50));
     }
+    
+    LVL.clear_dead = function(){
+        var tmp = [];
+        for(var i = 0; i < LVL.nodes.length; i++){
+            var node = LVL.nodes[i];
+            if(node.dying){
+                node.size *= 2/3;
+                if(node.size < 10){
+                    node.dead = true;
+                    if(node.type == "star" || node.type == "planet")
+                        LVL.masscount --;
+                    if(node.type == "ship"){
+                        cancelAnimationFrame(window.frameId);
+                        document.getElementById("messages").innerHTML = "<p>Your ship was destroyed. Oops?</p>";
+                        document.getElementById("log").className = "extended";
+                    }
+                }
+            }
+            if(!node.dead){
+                if(node.type == 'ship') LVL.shipindex = tmp.length;
+                tmp.push(node);
+            }
+            
+        }
+        LVL.nodes = tmp;
+    }
+                
+                
 }
 (window.LVL = window.LVL || {}));
