@@ -18,6 +18,14 @@ function init(){
         e.stopPropagation();
         return false;
     }
+    document.getElementById("reset").onclick = function(e){
+        document.getElementById("log").className = "";
+        FX.reset_pov();
+        init();
+        main_loop();
+        e.stopPropagation();
+        return false;
+    }
 }
 
 function main_loop() {
@@ -67,6 +75,8 @@ function main_loop() {
     
     s = CTRL.state(); 
     ship.rotation += s.rotation;
+    if(ship.rotation < 0) ship.rotation += 2*Math.PI;
+    ship.rotation %= 2*Math.PI;
     ship.thrust = s.thrust;
 }
 

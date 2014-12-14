@@ -37,6 +37,10 @@
         }
     };
     
+    FX.reset_pov = function(){
+        pov = {track: 0, x: 0, y: 0};
+    }
+        
     FX.zoom_out = function(){
         FX.zoom *= 2;
     };
@@ -107,11 +111,11 @@
     FX.draw_ship = function(scr){
         ctx.beginPath();
         ctx.moveTo(scr.x, scr.y);
-        ctx.arc(scr.x, scr.y, 100, this.rotation-0.3, this.rotation+0.3);
+        ctx.arc(scr.x, scr.y, this.range / FX.zoom, this.rotation-0.3, this.rotation+0.3);
         ctx.lineTo(scr.x, scr.y);
-        var grad = ctx.createRadialGradient(scr.x, scr.y, 1, scr.x, scr.y, 100);
-        grad.addColorStop(0, 'rgba(200, 200, 200, 0.6)');
-        grad.addColorStop(1, 'rgba(200, 200, 200, 0.0)');
+        var grad = ctx.createRadialGradient(scr.x, scr.y, 1, scr.x, scr.y, this.range / FX.zoom);
+        grad.addColorStop(0, this.color + ', 0.4)');
+        grad.addColorStop(1, this.color + ', 0.0)');
         ctx.fillStyle = grad;
         ctx.fill();
         

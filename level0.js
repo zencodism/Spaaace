@@ -3,19 +3,34 @@
     LVL.masscount = 0;
     LVL.shipindex = 0;
     
-    var rnd = Math.random;
+    var rnd = Math.random,
+        rndint = function(x){ return Math.round(Math.random() * x) };
     
     LVL.init_world = function(){
-        LVL.nodes.push(new ACTS.star(rnd() * 3200 - 1600, rnd() * 3200 - 1600, 300000, 0, 0));
+        LVL.nodes = [];
+        LVL.nodes.push(new ACTS.star(rndint(3200) - 1600, rndint(3200) - 1600, 300000, 0, 0));
         LVL.nodes.push(new ACTS.planet(LVL.nodes[0].x+2500, LVL.nodes[0].y-1940, 5000, 0, 0));
         LVL.shipindex = LVL.nodes.length;
         LVL.nodes.push(new ACTS.ship(LVL.nodes[1].x+100, LVL.nodes[1].y-120, 1, 0, 0));
         PHYS.orbit(LVL.nodes[0], LVL.nodes[1]);
         PHYS.orbit(LVL.nodes[1], LVL.nodes[2]);
         LVL.masscount = LVL.shipindex;
-        //for(var i = 0; i < 30; i++)
-            LVL.add_random_object();
+        for(var i = 0; i < 5; i++)
+            LVL.add_checkpoint();
     };
+    
+    LVL.end = function(msg){
+        cancelAnimationFrame(window.frameId);
+        document.getElementById("messages").innerHTML = "<p>" + msg + "</p>";
+        document.getElementById("log").className = "extended";
+    }
+    
+    
+    LVL.add_checkpoint = function(){
+        var ind = LVL.nodes.length;
+        LVL.nodes.push(new ACTS.check(rndint(3200) - 1600, rndint(3200) - 1600, 0, 0));
+        PHYS.orbit(LVL.nodes[0], LVL.nodes[ind]);
+    }
     
     LVL.add_random_object = function(){
         if(rnd() > 0.7)
@@ -25,28 +40,30 @@
     }
     
     LVL.clear_dead = function(){
-        var tmp = [];
+        var tmp = [],
+            checkpoints = 0;
         for(var i = 0; i < LVL.nodes.length; i++){
             var node = LVL.nodes[i];
             if(node.dying){
-                node.size *= 2/3;
+                node.size /= 2;
                 if(node.size < 10){
                     node.dead = true;
                     if(node.type == "star" || node.type == "planet")
                         LVL.masscount --;
                     if(node.type == "ship"){
-                        cancelAnimationFrame(window.frameId);
-                        document.getElementById("messages").innerHTML = "<p>Your ship was destroyed. Oops?</p>";
-                        document.getElementById("log").className = "extended";
+                        LVL.end("Your ship was destroyed. Oops?");
                     }
                 }
             }
             if(!node.dead){
                 if(node.type == 'ship') LVL.shipindex = tmp.length;
+                if(node.type == 'check') checkpoints ++;
                 tmp.push(node);
             }
             
         }
+        if(checkpoints == 0)
+            LVL.end("All checkpoints cleared. Congratulations!");
         LVL.nodes = tmp;
     }
                 

@@ -4,10 +4,10 @@
         thrust = 0;
 
     arrowsPressed = function(key){
-        if(key.keyCode == 38) thrust = 12;
-        if(key.keyCode == 40) thrust = -12;
-        if(key.keyCode == 37) rotation = -0.2;
-        if(key.keyCode == 39) rotation = 0.2;
+        if(key.keyCode == 38) thrust = 10;
+        if(key.keyCode == 40) thrust = -10;
+        if(key.keyCode == 37) rotation = -0.1;
+        if(key.keyCode == 39) rotation = 0.1;
         return false;
     };
 

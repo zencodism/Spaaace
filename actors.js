@@ -12,7 +12,22 @@
     };        
     
     var harvest = function(target){
-        
+        var dx = target.x - this.x,
+            dy = target.y - this.y,
+            angle = Math.atan2(dy, dx);
+        if(angle < 0) angle += 2 * Math.PI;
+        if(angle > this.rotation - 0.3 && angle < this.rotation + 0.3){
+            this.color = 'rgba(150, 230, 150';
+            if(target.type == 'check'){
+                target.size -= 5;
+                if(target.size < 10){
+                    document.getElementById("messages").innerHTML = "Checkpoint cleared!";
+                    target.dead = true;
+                }
+            }
+        }
+        else
+            this.color = 'rgba(200, 200, 200';
     }
 
     ACTS.node = function(x, y, mass, vx, vy){
@@ -57,7 +72,7 @@
         that.draw = FX.draw_star;
         that.size = 2*Math.sqrt(mass);
         that.oncontact = eat;
-        that.range = that.size;
+        that.range = that.size / 2;
         return that;
     }
     
@@ -71,12 +86,13 @@
         that.draw = FX.draw_ship;
         that.range = 1000;
         that.oncontact = harvest;
+        that.color = 'rgba(200, 200, 200'
         return that;
     }
     
-    ACTS.gate = function(x, y, mass, vx, vy){
-        var that = new ACTS.node(x, y, mass, vx, vy);
-        that.type = 'gate';
+    ACTS.check = function(x, y, vx, vy){
+        var that = new ACTS.node(x, y, 1, vx, vy);
+        that.type = 'check';
         that.icon = new Image();
         that.icon.src = 'img/sprites.png';
         that.draw = FX.draw_gate;

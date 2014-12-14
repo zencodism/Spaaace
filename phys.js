@@ -8,7 +8,6 @@
             for(var j = 0; j < arr.length; j++){
                 if(i == j) continue;
                 var a = arr[i], b = arr[j];
-                if(b.mass <= 1) continue;
                 var dx = b.x - a.x,
                     dy = b.y - a.y,
                     far = Math.sqrt(dx * dx + dy * dy) + 1,
