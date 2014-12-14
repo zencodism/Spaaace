@@ -73,25 +73,26 @@
     FX.draw_icon = function(scr){
         shctx.clearRect(-400, -400, 800, 800);
         if(scr.s > 100){
-            shctx.drawImage(this.icon, -400, -400);
+            shctx.drawImage(this.icon, -400, -400, 800, 800);
             shctx.rotate(-this.lightangle);
-            shctx.drawImage(shadow_icon, -400, -400);
+            shctx.drawImage(shadow_icon, -400, -400, 800, 800);
             shctx.rotate(this.lightangle);
             ctx.drawImage(shadow_canvas, scr.x - scr.s/2, scr.y - scr.s/2, scr.s, scr.s);
         }
         else{
-            shctx.drawImage(this.s_icon, -50, -50);
+            shctx.drawImage(this.s_icon, -50, -50, 100, 100);
             shctx.rotate(-this.lightangle);
-            shctx.drawImage(s_shadow_icon, -50, -50);
+            shctx.drawImage(s_shadow_icon, -50, -50, 100, 100);
             shctx.rotate(this.lightangle);
             ctx.drawImage(shadow_canvas, 350, 350, 100, 100, scr.x - scr.s/2, scr.y - scr.s/2, scr.s, scr.s);
         }
     };
     
     FX.draw_gate = function(scr){
-        ctx.drawImage(this.icon, 128*this.frame, 0, 128, 128, scr.x - scr.s/2, scr.y - scr.s/2, scr.s, scr.s);
-        this.frame ++;
-        this.frame %= 30;
+        ctx.drawImage(this.icon, scr.x - scr.s/2, scr.y - scr.s/2, scr.s, scr.s);
+//        ctx.drawImage(this.icon, 128*this.frame, 0, 128, 128, scr.x - scr.s/2, scr.y - scr.s/2, scr.s, scr.s);
+//        this.frame ++;
+//        this.frame %= 30;
     };
     
     FX.draw_star = function(scr){

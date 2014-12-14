@@ -8,10 +8,10 @@
     
     LVL.init_world = function(){
         LVL.nodes = [];
-        LVL.nodes.push(new ACTS.star(rndint(3200) - 1600, rndint(3200) - 1600, 300000, 0, 0));
-        LVL.nodes.push(new ACTS.planet(LVL.nodes[0].x+2500, LVL.nodes[0].y-1940, 5000, 0, 0));
+        LVL.nodes.push(new ACTS.star(0, 0, 300000, 0, 0));
+        LVL.nodes.push(new ACTS.planet(rndint(1600) + 1600, rndint(1600) + 1600, 10000, 0, 0));
         LVL.shipindex = LVL.nodes.length;
-        LVL.nodes.push(new ACTS.ship(LVL.nodes[1].x+100, LVL.nodes[1].y-120, 1, 0, 0));
+        LVL.nodes.push(new ACTS.ship(LVL.nodes[1].x+200, LVL.nodes[1].y-220, 1, 0, 0));
         PHYS.orbit(LVL.nodes[0], LVL.nodes[1]);
         PHYS.orbit(LVL.nodes[1], LVL.nodes[2]);
         LVL.masscount = LVL.shipindex;

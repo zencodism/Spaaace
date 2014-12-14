@@ -31,8 +31,15 @@
             far = Math.sqrt(dx * dx + dy * dy),
             g =  (PHYS.G * center.mass * orbiter.mass) / (far * far ),
             V = Math.sqrt(g * far / orbiter.mass );
-        orbiter.vx = center.vx + dy * V / far;
-        orbiter.vy = center.vy -dx * V / far;
+        if(Math.random() >= 0.5){
+            orbiter.vx = center.vx + dy * V / far;
+            orbiter.vy = center.vy - dx * V / far;
+        }
+        else{
+            orbiter.vx = center.vx - dy * V / far;
+            orbiter.vy = center.vy + dx * V / far;
+            
+        }
     };
 
 }

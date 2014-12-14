@@ -17,14 +17,17 @@
             angle = Math.atan2(dy, dx);
         if(angle < 0) angle += 2 * Math.PI;
         if(angle > this.rotation - 0.3 && angle < this.rotation + 0.3){
-            this.color = 'rgba(150, 230, 150';
             if(target.type == 'check'){
+                this.color = 'rgba(150, 230, 150';
                 target.size -= 5;
                 if(target.size < 10){
                     document.getElementById("messages").innerHTML = "Checkpoint cleared!";
                     target.dead = true;
                 }
             }
+            else
+                this.color = 'rgba(230, 150, 150';
+            
         }
         else
             this.color = 'rgba(200, 200, 200';
@@ -94,7 +97,8 @@
         var that = new ACTS.node(x, y, 1, vx, vy);
         that.type = 'check';
         that.icon = new Image();
-        that.icon.src = 'img/sprites.png';
+        var ending = Math.floor(rnd() * 4) + '.png';
+        that.icon.src = 'img/asteroid' + ending; 
         that.draw = FX.draw_gate;
         that.frame = 0;
         that.size = 128;
