@@ -3,6 +3,7 @@
     
     var eat = function(target){
         if(this.mass < target.mass) return;
+        if(target.type == 'check') return;
         this.vx += target.vx * (target.mass / (target.mass + this.mass));
         this.vy += target.vy * (target.mass / (target.mass + this.mass));
         this.mass += target.mass;

@@ -51,7 +51,7 @@
                     if(node.type == "star" || node.type == "planet")
                         LVL.masscount --;
                     if(node.type == "ship"){
-                        LVL.end("Your ship was destroyed. Oops?");
+                        LVL.end("Your ship was destroyed in violent crash.");
                     }
                 }
             }

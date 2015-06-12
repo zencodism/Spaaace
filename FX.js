@@ -39,6 +39,7 @@
     
     FX.reset_pov = function(){
         pov = {track: 0, x: 0, y: 0};
+        //zoom = 8;
     }
         
     FX.zoom_out = function(){
@@ -120,10 +121,11 @@
         ctx.fillStyle = grad;
         ctx.fill();
         
-        sctx.rotate(this.rotation);
-        sctx.drawImage(this.icon, -100, -100);
-        sctx.rotate(-this.rotation);
-        ctx.drawImage(ship_canvas, scr.x-scr.s/2, scr.y-scr.s/2, scr.s, scr.s);
+//        sctx.rotate(this.rotation);
+//        sctx.drawImage(this.icon, -100, -100);
+//        sctx.rotate(-this.rotation);
+//        ctx.drawImage(ship_canvas, scr.x-scr.s/2, scr.y-scr.s/2, scr.s, scr.s);
+        ctx.fillRect(scr.x - 1, scr.y - 1, 2, 2)
         
     };
 

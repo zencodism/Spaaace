@@ -26,6 +26,15 @@ function init(){
         e.stopPropagation();
         return false;
     }
+    document.getElementById("next").onclick = function(e){
+        document.getElementById("log").className = "";
+        FX.reset_pov();
+        load_second(LVL);
+        init();
+        main_loop();
+        e.stopPropagation();
+        return false;
+    }
 }
 
 function main_loop() {
@@ -37,8 +46,8 @@ function main_loop() {
     dt = Date.now();
     var fps = Math.ceil(200/ddt);
     var ship = LVL.nodes[LVL.shipindex];
-        
     if(dt > nextDT){
+        ship.color = 'rgba(200, 200, 200';
         nextDT = dt + 200;
         PHYS.gravity(LVL.nodes); 
         LVL.clear_dead();
@@ -67,6 +76,10 @@ function main_loop() {
     LVL.nodes.forEach(function(node){
         node.x += node.vx / fps;
         node.y += node.vy / fps;
+//        if(node.x * node.x > 10000000 || node.y * node.y > 10000000){
+//            node.x *= -1;
+//            node.y *= -1;
+//        }
     });
     
 //    for(var i = 0; i < traces.length; i++)

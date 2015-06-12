@@ -1,6 +1,6 @@
 (function(PHYS){
     
-    PHYS.G = 20;
+    PHYS.G = 10;
     
     PHYS.gravity = function(arr) {
         for(var i = 0; i < arr.length; i++){
