@@ -91,9 +91,9 @@
     
     FX.draw_gate = function(scr){
         ctx.drawImage(this.icon, scr.x - scr.s/2, scr.y - scr.s/2, scr.s, scr.s);
-//        ctx.drawImage(this.icon, 128*this.frame, 0, 128, 128, scr.x - scr.s/2, scr.y - scr.s/2, scr.s, scr.s);
-//        this.frame ++;
-//        this.frame %= 30;
+ //       ctx.drawImage(this.icon, 128*this.frame, 0, 128, 128, scr.x - scr.s/2, scr.y - scr.s/2, scr.s, scr.s);
+ //       this.frame ++;
+ //       this.frame %= 30;
     };
     
     FX.draw_star = function(scr){
@@ -145,7 +145,7 @@
     };
     
     FX.draw_frame = function(arr){
-        for(var i = 0; i < arr.length; i++){
+		for(var i = 0; i < arr.length; i++){
             var scr = FX.translate_coords(arr[i].x, arr[i].y, arr[i].size);
             if(scr.x > -scr.s && scr.x > -scr.s && scr.x < canvas.width + scr.s && scr.y < canvas.height + scr.s)
                 arr[i].draw(scr);

@@ -2,7 +2,7 @@
     
     PHYS.G = 10;
     
-    PHYS.gravity = function(arr) {
+    PHYS.gravity = function(arr, antigrav) {
         for(var i = 0; i < arr.length; i++){
             if(arr[i].type == 'planet') arr[i].farlight = Infinity;
             for(var j = 0; j < arr.length; j++){
@@ -12,6 +12,8 @@
                     dy = b.y - a.y,
                     far = Math.sqrt(dx * dx + dy * dy) + 1,
                     force = (PHYS.G * b.mass) / (far * far * far);
+                if(antigrav && a.type == 'ship')
+                    force *= -3.0;
                 a.vx += force * dx;
                 a.vy += force * dy;
                 if(far < a.range) a.oncontact(b);

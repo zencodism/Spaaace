@@ -1,13 +1,15 @@
 (function(CTRL){
     
     var rotation = 0,
-        thrust = 0;
+        thrust = 0,
+        antigrav = false;
 
     arrowsPressed = function(key){
         if(key.keyCode == 38) thrust = 10;
         if(key.keyCode == 40) thrust = -10;
         if(key.keyCode == 37) rotation = -0.1;
         if(key.keyCode == 39) rotation = 0.1;
+        if(key.keyCode == 32) antigrav = true;
         return false;
     };
 
@@ -19,11 +21,12 @@
         if(key.keyCode == 33) FX.zoom_out();
         if(key.keyCode == 34) FX.zoom_in();
         if(key.keyCode == 36) FX.reset_pov();
+        if(key.keyCode == 32) antigrav = false;
         return false;
     };
 
     CTRL.state = function(){
-        return { rotation: rotation, thrust: thrust };
+        return { rotation: rotation, thrust: thrust, antigrav: antigrav };
     }
     
     zoom_handler = function(event){
