@@ -3,10 +3,23 @@
     var rotation = 0,
         thrust = 0,
         antigrav = false;
+    
+    var sound = new Audio('media/thrust.ogg');
 
+    sound.addEventListener('ended', function() {
+        this.currentTime = 0;
+        this.play();
+    }, false);
+    
     arrowsPressed = function(key){
-        if(key.keyCode == 38) thrust = 10;
-        if(key.keyCode == 40) thrust = -10;
+        if(key.keyCode == 38){
+            thrust = 10;
+            if(sound.paused) sound.play();
+        }
+        if(key.keyCode == 40){
+            thrust = -10;
+            if(sound.paused) sound.play();
+        }
         if(key.keyCode == 37) rotation = -0.1;
         if(key.keyCode == 39) rotation = 0.1;
         if(key.keyCode == 32) antigrav = true;
@@ -14,8 +27,14 @@
     };
 
     arrowsReleased = function(key){
-        if(key.keyCode == 38) thrust = 0;
-        if(key.keyCode == 40) thrust = 0;
+        if(key.keyCode == 38){
+            thrust = 0;
+            if(!sound.paused) sound.pause();
+        }                     
+        if(key.keyCode == 40){
+            thrust = 0;
+            if(!sound.paused) sound.pause();
+        }
         if(key.keyCode == 37) rotation = 0;
         if(key.keyCode == 39) rotation = 0;
         if(key.keyCode == 33) FX.zoom_out();

@@ -53,6 +53,17 @@ canvas{
     height: 40%;
 }
 
+#helpscreen{
+    height: 0;
+}
+
+#log.extended div#helpscreen{
+    background-image: url(../media/controls.png);
+    width: 600px;
+    height: 425px;
+    margin: auto;
+}
+
 #messages, #messages *{
     margin: 5px;
     font-weight:bold;
